@@ -1,0 +1,22 @@
+{
+  "name": "social",
+  "version": "1.0.0",
+  "description": "POC for communication with social networks (Linkedin, Twitter, Instagram, Facebook)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "social",
+    "linkedin",
+    "twitter",
+    "facebook",
+    "instagram"
+  ],
+  "author": "Call me Jonah",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "isomorphic-fetch": "^3.0.0"
+  }
+}

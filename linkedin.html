@@ -1,0 +1,47 @@
+<div>
+    <p>Getting the auth token from Linkedin</p>
+    <a href="index.html">Back to Index</a>
+
+    <script src="utils.js"></script>
+
+    <script>
+        const clientId = "785834j9roa0im";
+        const clientSecret = "Ap2rKr9DpMM50pBo";
+        const pageUrl = "http://localhost:8000/linkedin.html";
+
+        // Redirects to Linkedin login page
+        function getLinkedinCode() {
+            const state = Math.floor(Math.random() * 10000);
+            const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&state=${state}&scope=w_member_social,r_liteprofile&client_id=${clientId}&redirect_uri=${encodeURI(pageUrl)}`;
+            window.location.href = url;
+        }
+
+        // Creates the url for getting access token as getting it from browser doesn't work
+        function getLinkedinAccessTokenUrl(code) {
+            let url = `https://www.linkedin.com/oauth/v2/accessToken`;
+            const params = {
+                grant_type: "authorization_code",
+                client_id: clientId,
+                client_secret: clientSecret,
+                code: code,
+                redirect_uri: pageUrl,
+            };
+            const paramsStr = toQueryString(params);
+            url += paramsStr;
+            return url;
+        }
+
+        const code = parseCodeFromResponse();
+        if (!code) {
+            getLinkedinCode();
+        } else {
+            console.log("Code:");
+            console.log(code);
+        }
+
+        const accessTokenUrl = getLinkedinAccessTokenUrl(code);
+        console.log("Get access token from here:");
+        console.log(accessTokenUrl);
+
+    </script>
+</div>

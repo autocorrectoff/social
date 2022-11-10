@@ -1,0 +1,56 @@
+<div>
+    <p>Getting the auth token from Facebook</p>
+    <a href="index.html">Back to Index</a>
+
+    <script src="utils.js"></script>
+
+    <script>
+        const appId = "394495559533777";
+        const appSecret = "284af469111431a2329fb30c08292334";
+        const pageUrl = "http://localhost:8000/facebook.html";
+
+        function login() {
+            let url = "https://www.facebook.com/v15.0/dialog/oauth";
+            const state = Math.floor(Math.random() * 10000);
+            url += toQueryString({
+                client_id: appId,
+                redirect_uri: pageUrl,
+                state: state,
+                scope: "public_profile,email,user_posts,user_friends,user_videos,user_photos,user_likes"
+            });
+            window.location.href = url;
+        }
+
+        // Surprisingly it's a GET endpoint, so CORS isn't blocking the request
+        // so we can get the access token making request from the browser
+        function getAccessTokenParams(code) {
+            let url = "https://graph.facebook.com/v6.0/oauth/access_token?";
+            const params = {
+                grant_type: "authorization_code",
+                code: code,
+                client_id: appId,
+                client_secret: appSecret,
+                redirect_uri: pageUrl
+            };
+            url += toQueryString(params);
+            return fetch(url);
+        }
+
+        const code = parseCodeFromResponse();
+        if (!code) {
+            login();
+        } else {
+            console.log("Code:");
+            console.log(code);
+        }
+
+        const accessTokenUrl = getAccessTokenParams(code).then(res => {
+            if (res.status == 200) {
+                console.log("Access Token from Facebook:");
+                res.json().then(body => {
+                    console.log(body);
+                });
+            }
+        });
+    </script>
+</div>

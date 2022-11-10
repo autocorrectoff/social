@@ -1,0 +1,54 @@
+<div>
+    <p>Getting the auth token from Twitter</p>
+    <a href="index.html">Back to Index</a>
+
+    <script src="utils.js"></script>
+
+    <script>
+        const clientId = "MWJiMHRTb1EzelprbmRyTkozaG86MTpjaQ";
+        const pageUrl = "http://localhost:8000/twitter.html";
+        let challenge = 123456;
+
+        function login() {
+            let url = "https://twitter.com/i/oauth2/authorize";
+            const state = Math.floor(Math.random() * 10000);
+            const params = {
+                "response_type": "code",
+                "client_id": clientId,
+                "redirect_uri": pageUrl,
+                "scope": "tweet.read tweet.write users.read offline.access",
+                "state": state.toString(),
+                "code_challenge": challenge.toString(),
+                "code_challenge_method": "plain"
+            };
+            url += toQueryString(params);
+            window.location.href = url;
+        }
+
+        function getAccessTokenParams(code) {
+            const params = {
+                grant_type: "authorization_code",
+                code: code,
+                client_id: clientId,
+                code_verifier: challenge,
+                redirect_uri: pageUrl
+            };
+            const paramsStr = toQueryString(params);
+            return paramsStr;
+        }
+
+        const code = parseCodeFromResponse();
+        if (!code) {
+            login();
+        } else {
+            console.log("Code:");
+            console.log(code);
+        }
+
+        const accessTokenUrl = getAccessTokenParams(code);
+        console.log("Your access token params:");
+        console.log(accessTokenUrl);
+
+
+    </script>
+</div>
